@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cart — Saffron Stitch</title>
+    <meta name="description" content="Your shopping cart at Saffron Stitch." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .cart-wrap{max-width:1100px;margin:0 auto;padding:28px 20px}
+      .cart-title{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:6px 0 8px}
+      .items{display:grid;gap:12px;margin-top:12px}
+      .item{display:grid;grid-template-columns: 80px 1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;padding:10px;box-shadow:var(--shadow)}
+      .item img{width:80px;height:80px;object-fit:cover;border-radius:10px}
+      .meta h3{margin:0 0 4px;font-size:16px}
+      .muted{color:var(--muted);font-size:14px;margin:0}
+      .qty{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+      .qty button{width:28px;height:28px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff}
+      .price{font-weight:700}
+      .row{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+      .checkout{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:12px;background:linear-gradient(180deg, var(--saffron), var(--saffron-strong));color:#000000;font-weight:700; text-decoration:none;border:none;cursor:pointer}
+      .empty{color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img class="brand-logo" src="./images/logo.jpeg" alt="Saffron Stitch logo" width="32" height="32" />
+        <a href="index.html#top" class="brand-name">Saffron Stitch</a>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="developer.html" class="nav-link">About Developer</a>
+        <a href="cart.html" class="nav-link" id="nav-cart-link">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L21 6H6"></path></svg>
+          </span>
+          Cart (0)
+        </a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+    </header>
+
+    <main class="cart-wrap">
+      <h1 class="gradient-text cart-title">Your Cart</h1>
+      <div id="items" class="items"></div>
+      <div class="row">
+        <p id="summary" class="muted">Subtotal: ₹0</p>
+        <a href="checkout.html" class="checkout" id="checkout-btn">Checkout</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Saffron Stitch • Made in India</p>
+    </footer>
+
+    <div class="mobile-overlay" hidden></div>
+    <aside id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="mobile-link" href="index.html">Home</a>
+        <a class="mobile-link" href="about.html">About</a>
+        <a class="mobile-link" href="contact.html">Contact</a>
+        <a class="mobile-link" href="developer.html">Developer</a>
+        <a class="mobile-link" href="cart.html">Cart</a>
+      </nav>
+    </aside>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // Drawer toggle
+      const menuBtn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlayNav = document.querySelector('.mobile-overlay');
+      function openDrawer(){ drawer.classList.add('open'); overlayNav.hidden=false; document.body.classList.add('nav-open'); menuBtn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+      function closeDrawer(){ drawer.classList.remove('open'); overlayNav.hidden=true; document.body.classList.remove('nav-open'); menuBtn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+      if(menuBtn && drawer && overlayNav){
+        menuBtn.addEventListener('click', ()=> drawer.classList.contains('open')? closeDrawer(): openDrawer());
+        overlayNav.addEventListener('click', closeDrawer);
+        drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeDrawer));
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer() });
+      }
+
+      // Cart management
+      function getCart(){ return JSON.parse(localStorage.getItem('cart')||'[]') }
+      function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); updateCartCount(); render(); }
+      function updateCartCount(){ const link=document.getElementById('nav-cart-link'); if(!link) return; const c=getCart(); link.lastChild.nodeValue = ` Cart (${c.length})`; }
+
+      function render(){
+        const list = document.getElementById('items');
+        const cart = getCart();
+        list.innerHTML = '';
+        let subtotal = 0;
+        if(cart.length===0){
+          list.innerHTML = '<p class="empty">Your cart is empty.</p>';
+        } else {
+          cart.forEach((item, idx)=>{
+            subtotal += item.price * item.qty;
+            const el = document.createElement('div');
+            el.className = 'item';
+            el.innerHTML = `
+              <img src="${item.image}" alt="${item.title}"/>
+              <div class="meta">
+                <h3>${item.title}</h3>
+                <p class="muted">Version: ${item.version}</p>
+                <div class="qty">
+                  <div class="qty-controls">
+                    <button data-action="dec" data-idx="${idx}">−</button>
+                    <span>Qty: ${item.qty}</span>
+                    <button data-action="inc" data-idx="${idx}">+</button>
+                  </div>
+                  <div class="item-actions">
+                    <button data-action="rm" data-idx="${idx}" class="remove-btn" style="width:100px" ">Remove</button>
+                    <button data-action="checkout" data-idx="${idx}" class="item-checkout"  style="color:orange; width:100px; margin-left:8px">Checkout</button>
+                  </div>
+                </div>
+              </div>
+              <div class="price">₹${item.price * item.qty}</div>
+            `;
+            list.appendChild(el);
+          });
+        }
+        document.getElementById('summary').textContent = `Subtotal: ₹${subtotal}`;
+        updateCartCount();
+        list.querySelectorAll('button').forEach(btn=>{
+          btn.addEventListener('click',(e)=>{
+            const action=e.currentTarget.dataset.action; const idx=Number(e.currentTarget.dataset.idx);
+            const c=getCart(); if(!c[idx]) return;
+            if(action==='inc'){ c[idx].qty+=1; setCart(c); return; }
+            if(action==='dec'){ c[idx].qty = Math.max(1, c[idx].qty-1); setCart(c); return; }
+            if(action==='rm'){ c.splice(idx,1); setCart(c); return; }
+            if(action==='checkout'){
+              localStorage.setItem('checkoutSelection', JSON.stringify([c[idx]]));
+              window.location.href = 'checkout.html';
+              return;
+            }
+          });
+        });
+      }
+
+      render();
+    </script>
+  </body>
+</html> 

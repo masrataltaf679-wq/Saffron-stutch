@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About Us — Saffron Stitch</title>
+    <meta name="description" content="About Saffron Stitch: our story, values, and what makes our prints special." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .about-hero{max-width:1100px; margin:0 auto; padding:36px 20px}
+      .about-title{font-size:clamp(28px,6vw,44px); line-height:1.05; margin:6px 0 8px}
+      .about-sub{color:var(--muted); margin:0 0 18px}
+      .about-grid{max-width:1100px; margin:0 auto 30px; padding:0 20px; display:grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap:14px}
+      .about-card{grid-column: span 12; background:#fff; border:1px solid rgba(0,0,0,0.06); border-left:4px solid var(--saffron); border-radius:14px; padding:16px; box-shadow: var(--shadow)}
+      .about-card h3{margin:2px 0 6px}
+      .about-card p{margin:0; color:var(--muted)}
+      @media (min-width: 760px){ .about-card.span-6{grid-column: span 6} .about-card.span-4{grid-column: span 4} }
+      .accent-band{max-width:1100px; margin:18px auto 0; padding:0 12px}
+      .accent-inner{display:flex; gap:18px; overflow:auto; padding:10px 14px; border-radius:999px; background:linear-gradient(90deg, rgba(255,143,31,0.08), rgba(255,143,31,0.02)); border:1px solid rgba(255,143,31,0.18); color:var(--saffron-strong)}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img class="brand-logo" src="./images/logo.jpeg" alt="Saffron Stitch logo" width="32" height="32" />
+        <a href="index.html#top" class="brand-name">Saffron Stitch</a>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="developer.html" class="nav-link">About Developer</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+    </header>
+
+    <section class="mobile-home" aria-label="Mobile About">
+      <div class="mobile-hero">
+        <img class="mobile-logo" src="./images/logo.jpeg" alt="Saffron Stitch" />
+        <h1 class="mobile-title">About Saffron Stitch</h1>
+        <p class="mobile-subtitle">Indian brand • Vibrant prints • Premium materials</p>
+      </div>
+      <div class="mobile-cards">
+        <div class="mobile-card"><div class="mc-icon">🧵</div><div class="mc-body"><h3>Quality</h3><p>Long‑lasting colors</p></div></div>
+        <div class="mobile-card"><div class="mc-icon">⚡</div><div class="mc-body"><h3>Speed</h3><p>Fast dispatch</p></div></div>
+        <div class="mobile-card"><div class="mc-icon">💬</div><div class="mc-body"><h3>Support</h3><p>Friendly help</p></div></div>
+      </div>
+    </section>
+
+    <main>
+      <section class="about-hero">
+        <h1 class="gradient-text about-title" data-reveal>Our Story</h1>
+        <p class="about-sub" data-reveal>We craft personalized prints on apparel and accessories with care and precision.</p>
+      </section>
+
+      <section class="about-grid">
+        <article class="about-card span-6" data-reveal>
+          <h3>Made in India</h3>
+          <p>Proudly designed and produced locally to ensure quality and fast delivery.</p>
+        </article>
+        <article class="about-card span-6" data-reveal>
+          <h3>Premium Materials</h3>
+          <p>We source fabrics and ceramics that hold color and feel great.</p>
+        </article>
+        <article class="about-card span-4" data-reveal>
+          <h3>Custom For You</h3>
+          <p>Every order is unique — we print your design the way you imagine.</p>
+        </article>
+        <article class="about-card span-4" data-reveal>
+          <h3>Care & Support</h3>
+          <p>Questions? Our team is here to help with sizing, designs, and bulk orders.</p>
+        </article>
+        <article class="about-card span-4" data-reveal>
+          <h3>Sustainable Inks</h3>
+          <p>Eco‑conscious printing processes and inks where possible.</p>
+        </article>
+      </section>
+
+      <section class="accent-band" aria-label="Highlights">
+        <div class="accent-inner">
+          <span>Premium Prints</span>
+          <span>Bulk Discounts</span>
+          <span>COD Available</span>
+          <span>Eco Inks</span>
+          <span>Gift Ready</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Saffron Stitch • Made in India</p>
+    </footer>
+
+    <div class="mobile-overlay" hidden></div>
+    <aside id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="mobile-link" href="index.html">Home</a>
+        <a class="mobile-link" href="about.html">About</a>
+        <a class="mobile-link" href="contact.html">Contact</a>
+        <a class="mobile-link" href="developer.html">Developer</a>
+      </nav>
+    </aside>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!prefersReduced) {
+        const revealEls = document.querySelectorAll('[data-reveal]');
+        const observer = ('IntersectionObserver' in window)
+          ? new IntersectionObserver((entries) => {
+              entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add('reveal-in'); observer.unobserve(entry.target);} });
+            }, { threshold: 0.12 }) : null;
+        revealEls.forEach((el) => { if (observer) observer.observe(el); else el.classList.add('reveal-in'); });
+      } else { document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('reveal-in')); }
+
+      // Drawer toggle
+      const menuBtn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.querySelector('.mobile-overlay');
+      function openDrawer(){ drawer.classList.add('open'); overlay.hidden=false; document.body.classList.add('nav-open'); menuBtn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+      function closeDrawer(){ drawer.classList.remove('open'); overlay.hidden=true; document.body.classList.remove('nav-open'); menuBtn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+      if (menuBtn && drawer && overlay){
+        menuBtn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+        overlay.addEventListener('click', closeDrawer);
+        drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+      }
+    </script>
+  </body>
+</html> 

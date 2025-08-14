@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hoodies — Coming Soon</title>
+    <meta name="description" content="Hoodies page coming soon with awesome designs." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      :root{ --gold:#d4af37; --gold2:#b8860b; --vio:#1e1b4b; }
+      body{background: radial-gradient(900px 360px at 0% 0%, rgba(212,175,55,0.12), transparent 60%), radial-gradient(900px 340px at 100% 0%, rgba(212,175,55,0.08), transparent 60%), var(--vio)}
+      .cs-wrap{position:relative; min-height:60vh; display:flex; align-items:center; justify-content:center; padding:40px 16px}
+      .cs-title{font-size:clamp(32px, 8vw, 64px); line-height:1.02; margin:0 0 8px; background: linear-gradient(90deg, var(--gold), var(--gold2)); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow: 0 0 24px rgba(212,175,55,0.16)}
+      .cs-sub{color:var(--muted); margin:0}
+      canvas#fx{position:fixed; inset:0; width:100%; height:100%; z-index:-1}
+    </style>
+  </head>
+  <body>
+    <canvas id="fx" aria-hidden="true"></canvas>
+    <header class="site-header">
+      <div class="brand">
+        <img class="brand-logo" src="./images/logo.jpeg" alt="Saffron Stitch logo" width="32" height="32" />
+        <a href="index.html#top" class="brand-name">Saffron Stitch</a>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="developer.html" class="nav-link">About Developer</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+    </header>
+
+    <main class="cs-wrap">
+      <div>
+        <h1 class="cs-title">Hoodies — Coming Soon</h1>
+        <p class="cs-sub">Cozy drops arriving soon. Stay tuned.</p>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Saffron Stitch • Made in India</p>
+    </footer>
+
+    <div class="mobile-overlay" hidden></div>
+    <aside id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="mobile-link" href="index.html">Home</a>
+        <a class="mobile-link" href="about.html">About</a>
+        <a class="mobile-link" href="contact.html">Contact</a>
+        <a class="mobile-link" href="developer.html">Developer</a>
+      </nav>
+    </aside>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const menuBtn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.querySelector('.mobile-overlay');
+      function openDrawer(){ drawer.classList.add('open'); overlay.hidden=false; document.body.classList.add('nav-open'); menuBtn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+      function closeDrawer(){ drawer.classList.remove('open'); overlay.hidden=true; document.body.classList.remove('nav-open'); menuBtn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+      if (menuBtn && drawer && overlay){
+        menuBtn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+        overlay.addEventListener('click', closeDrawer);
+        drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+      }
+
+      // Drifting blobs effect
+      const canvas = document.getElementById('fx');
+      const ctx = canvas.getContext('2d');
+      let w,h,t=0; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight } window.addEventListener('resize', resize); resize();
+      function blob(cx,cy,r){
+        const grd=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+        grd.addColorStop(0,'rgba(212,175,55,0.26)');
+        grd.addColorStop(1,'rgba(212,175,55,0)');
+        ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+      }
+      function loop(){
+        ctx.clearRect(0,0,w,h);
+        for(let i=0;i<6;i++){
+          const cx = w/2 + Math.sin((t+i*40)/90)* (120 + i*14);
+          const cy = h/2 + Math.cos((t+i*60)/110)* (70 + i*10);
+          const r = 80 + Math.sin((t+i*20)/70)*20;
+          blob(cx,cy,r);
+        }
+        t+=2; requestAnimationFrame(loop);
+      }
+      loop();
+    </script>
+  </body>
+</html> 

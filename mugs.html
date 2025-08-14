@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mugs — Coming Soon</title>
+    <meta name="description" content="Mugs page coming soon with awesome designs." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      :root{ --gold:#d4af37; --gold2:#b8860b; --vio:#1e1b4b; }
+      body{background: radial-gradient(900px 380px at 12% -10%, rgba(212,175,55,0.12), transparent 60%), radial-gradient(900px 360px at 110% 12%, rgba(212,175,55,0.08), transparent 60%), var(--vio)}
+      .cs-wrap{position:relative; min-height:60vh; display:flex; align-items:center; justify-content:center; padding:40px 16px}
+      .cs-title{font-size:clamp(32px, 8vw, 64px); line-height:1.02; margin:0 0 8px; background: linear-gradient(90deg, var(--gold), var(--gold2)); -webkit-background-clip:text; background-clip:text; color:transparent; text-shadow: 0 0 24px rgba(212,175,55,0.16)}
+      .cs-sub{color:var(--muted); margin:0}
+      canvas#fx{position:fixed; inset:0; width:100%; height:100%; z-index:-1}
+      .hint{margin-top:12px; color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <canvas id="fx" aria-hidden="true"></canvas>
+    <header class="site-header">
+      <div class="brand">
+        <img class="brand-logo" src="./images/logo.jpeg" alt="Saffron Stitch logo" width="32" height="32" />
+        <a href="index.html#top" class="brand-name">Saffron Stitch</a>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="developer.html" class="nav-link">About Developer</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+    </header>
+
+    <main class="cs-wrap">
+      <div>
+        <h1 class="cs-title">Mugs — Coming Soon</h1>
+        <p class="cs-sub">Fresh designs brewing. Stay tuned.</p>
+
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Saffron Stitch • Made in India</p>
+    </footer>
+
+    <div class="mobile-overlay" hidden></div>
+    <aside id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="mobile-link" href="index.html">Home</a>
+        <a class="mobile-link" href="about.html">About</a>
+        <a class="mobile-link" href="contact.html">Contact</a>
+        <a class="mobile-link" href="developer.html">Developer</a>
+      </nav>
+    </aside>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      const menuBtn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlay = document.querySelector('.mobile-overlay');
+      function openDrawer(){ drawer.classList.add('open'); overlay.hidden=false; document.body.classList.add('nav-open'); menuBtn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+      function closeDrawer(){ drawer.classList.remove('open'); overlay.hidden=true; document.body.classList.remove('nav-open'); menuBtn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+      if (menuBtn && drawer && overlay){
+        menuBtn.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
+        overlay.addEventListener('click', closeDrawer);
+        drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeDrawer));
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeDrawer(); });
+      }
+
+      // Constellation effect in gold theme
+      const canvas = document.getElementById('fx');
+      const ctx = canvas.getContext('2d');
+      let w,h; function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight } window.addEventListener('resize', resize); resize();
+      const N = 120; const nodes = []; const maxDist = 120;
+      function rand(a,b){ return Math.random()*(b-a)+a }
+      for(let i=0;i<N;i++) nodes.push({ x:rand(0,w), y:rand(0,h), vx:rand(-0.5,0.5), vy:rand(-0.5,0.5)});
+      const cursor = { x: w/2, y: h/3 };
+      window.addEventListener('mousemove', (e)=>{ cursor.x=e.clientX; cursor.y=e.clientY });
+      window.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; if(t){ cursor.x=t.clientX; cursor.y=t.clientY }},{passive:true});
+      function step(){
+        ctx.clearRect(0,0,w,h);
+        // move
+        for(const n of nodes){ n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1; }
+        // draw connections
+        for(let i=0;i<N;i++){
+          for(let j=i+1;j<N;j++){
+            const a=nodes[i], b=nodes[j]; const dx=a.x-b.x, dy=a.y-b.y; const d=Math.hypot(dx,dy);
+            if(d < maxDist){
+              const alpha = 1 - d/maxDist;
+              ctx.strokeStyle = 'rgba(212,175,55,'+ (0.20*alpha) +')';
+              ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+            }
+          }
+        }
+        // draw nodes and cursor halo
+        for(const n of nodes){
+          ctx.fillStyle = 'rgba(212,175,55,0.8)';
+          ctx.beginPath(); ctx.arc(n.x,n.y,1.6,0,Math.PI*2); ctx.fill();
+        }
+        const grd=ctx.createRadialGradient(cursor.x,cursor.y,0,cursor.x,cursor.y,90); grd.addColorStop(0,'rgba(212,175,55,0.16)'); grd.addColorStop(1,'rgba(212,175,55,0)');
+        ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(cursor.x,cursor.y,90,0,Math.PI*2); ctx.fill();
+        requestAnimationFrame(step);
+      }
+      step();
+    </script>
+  </body>
+</html> 

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cases — Saffron Stitch</title>
+    <meta name="description" content="Shop custom iPhone cases at Saffron Stitch." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .cases-hero{max-width:1100px;margin:0 auto;padding:28px 20px}
+      .cases-title{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:6px 0 8px}
+      .cases-sub{color:var(--muted);margin:0 0 18px}
+      .grid{max-width:1100px;margin:0 auto 30px;padding:0 20px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+      .card{grid-column:span 12;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+      .card img{width:100%;height:240px;object-fit:cover;display:block}
+      .card .body{padding:12px 14px}
+      .card h3{margin:2px 0 6px}
+      .price{display:flex;gap:8px;align-items:baseline}
+      .price-old{color:var(--muted);text-decoration:line-through;font-weight:600}
+      .price-new{color:#111827;font-weight:800}
+      .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
+      .add-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:10px;background:linear-gradient(180deg, var(--saffron), var(--saffron-strong));color:#fff;text-decoration:none;font-weight:700;box-shadow:var(--shadow);border:none;cursor:pointer}
+      @media(min-width:760px){.card.span-6{grid-column:span 6}}
+
+      /* Version modal */
+      .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.28);backdrop-filter:blur(2px);z-index:60;display:none}
+      .overlay.open{display:block}
+      .modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,480px);background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:14px;box-shadow:var(--shadow);z-index:70;padding:20px;display:none}
+      .modal.open{display:block}
+      .modal h3{margin:0 0 10px}
+      .field{display:grid;gap:8px;margin:15px 0}
+      .search-container{position:relative}
+      .search-input{padding:12px 16px;border-radius:12px;border:1px solid rgba(0,0,0,0.12);width:100%;font-size:14px;background:#f8f9fa;transition:all 0.2s}
+      .search-input:focus{outline:none;border-color:var(--saffron);background:#fff;box-shadow:0 0 0 3px rgba(255,165,0,0.1)}
+      .search-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+      .versions-list{max-height:300px;overflow-y:auto;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:#fafafa}
+      .version-item{padding:12px 16px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,0.04);transition:all 0.2s;display:flex;align-items:center;gap:8px}
+      .version-item:last-child{border-bottom:none}
+      .version-item:hover{background:linear-gradient(135deg, rgba(255,165,0,0.05), rgba(255,165,0,0.1));border-left:3px solid var(--saffron)}
+      .version-item.selected{background:linear-gradient(135deg, var(--saffron), var(--saffron-strong));color:#fff}
+      .version-item.selected:hover{background:linear-gradient(135deg, var(--saffron-strong), var(--saffron))}
+      .version-item.hidden{display:none}
+      .version-icon{width:16px;height:16px;opacity:0.7}
+      .version-item.selected .version-icon{opacity:1}
+      .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+      .ghost{background:#fff;border:1px solid rgba(0,0,0,0.12);color:#111827}
+      .no-results{padding:20px;text-align:center;color:var(--muted);font-style:italic}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <img class="brand-logo" src="./images/logo.jpeg" alt="Saffron Stitch logo" width="32" height="32" />
+        <a href="index.html#top" class="brand-name">Saffron Stitch</a>
+      </div>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="contact.html" class="nav-link">Contact Us</a>
+        <a href="developer.html" class="nav-link">About Developer</a>
+        <a href="cart.html" class="nav-link" id="nav-cart-link">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h7.72a2 2 0 0 0 2-1.61L21 6H6"></path></svg>
+          </span>
+          Cart (0)
+        </a>
+      </nav>
+      <button class="menu-toggle" aria-label="Open menu" aria-controls="mobile-drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+    </header>
+
+    <section class="cases-hero">
+      <h1 class="gradient-text cases-title">iPhone Cases</h1>
+      <p class="cases-sub">Premium protection with your style. Select version at add‑to‑cart.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card span-6" data-product-id="case-1" data-title="Custom Case — Classic" data-price="349" data-image="./images/phone case.jpg">
+        <img src="./images/phone case.jpg" alt="Classic custom phone case" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Custom Case — Classic</h3>
+            <div class="price"><span class="price-old">₹549</span><span class="price-new">₹349</span></div>
+          </div>
+          <p class="subtitle">Durable, vibrant print.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-2" data-title="Custom Case — Premium" data-price="299" data-image="./images/phone case 2.jpeg">
+        <img src="./images/phone case 2.jpeg" alt="Premium custom phone case" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Custom Case — Premium</h3>
+            <div class="price"><span class="price-old">₹499</span><span class="price-new">₹299</span></div>
+          </div>
+          <p class="subtitle">Matte/Glossy finishes.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-3" data-title="Phone Case 3" data-price="349" data-image="./images/phone case 3.jpg">
+        <img src="./images/phone case 3.jpg" alt="Phone Case 3" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Vibrant case - great design</h3>
+            <div class="price"><span class="price-old">₹549</span><span class="price-new">₹349</span></div>
+          </div>
+          <p class="subtitle">New design, same protection.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-4" data-title="Phone Case 4" data-price="229" data-image="./images/phone case 4.jpg">
+        <img src="./images/phone case 4.jpg" alt="Phone Case 4" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Simple - professional design</h3>
+            <div class="price"><span class="price-old">₹399</span><span class="price-new">₹229</span></div>
+          </div>
+          <p class="subtitle">Lightweight protection.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      
+      <!-- Additional cases from images starting with 'front-' -->
+      <article class="card span-6" data-product-id="case-front-1" data-title="Vibrant Glass — Color Pop" data-price="349" data-image="./images/front-689cab249d4e3-Apple_iPhone_16_Pro_Glass_Phone_Case.jpg">
+        <img src="./images/front-689cab249d4e3-Apple_iPhone_16_Pro_Glass_Phone_Case.jpg" alt="Vibrant Glass — Color Pop" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Vibrant Glass — Color Pop</h3>
+            <div class="price"><span class="price-old">₹549</span><span class="price-new">₹349</span></div>
+          </div>
+          <p class="subtitle">Tempered glass back, premium feel.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-front-2" data-title="Glossy Shield — Mirror Finish" data-price="349" data-image="./images/front-689cab68b494e-Apple_iPhone_15_Pro_Max_Glass_Phone_Case.jpg">
+        <img src="./images/front-689cab68b494e-Apple_iPhone_15_Pro_Max_Glass_Phone_Case.jpg" alt="Glossy Shield — Mirror Finish" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Glossy Shield — Mirror Finish</h3>
+            <div class="price"><span class="price-old">₹549</span><span class="price-new">₹349</span></div>
+          </div>
+          <p class="subtitle">Edge-to-edge shine, solid protection.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-front-3" data-title="Sleek Daily — Minimal Glass" data-price="299" data-image="./images/front-689caba5d5e95-Apple_iPhone_16_Glass_Phone_Case.jpg">
+        <img src="./images/front-689caba5d5e95-Apple_iPhone_16_Glass_Phone_Case.jpg" alt="Sleek Daily — Minimal Glass" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Sleek Daily — Minimal Glass</h3>
+            <div class="price"><span class="price-old">₹499</span><span class="price-new">₹299</span></div>
+          </div>
+          <p class="subtitle">Sleek and durable, everyday carry.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+      <article class="card span-6" data-product-id="case-front-4" data-title="Crystal Guard — Clear Grip" data-price="299" data-image="./images/front-689cabfeac645-Apple_iPhone_14_Pro_Max_Glass_Phone_Case.jpg">
+        <img src="./images/front-689cabfeac645-Apple_iPhone_14_Pro_Max_Glass_Phone_Case.jpg" alt="Crystal Guard — Clear Grip" loading="lazy" />
+        <div class="body">
+          <div class="row">
+            <h3>Crystal Guard — Clear Grip</h3>
+            <div class="price"><span class="price-old">₹499</span><span class="price-new">₹299</span></div>
+          </div>
+          <p class="subtitle">Crystal clarity with grip.</p>
+          <button class="add-btn">Add to Cart</button>
+        </div>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <p>© <span id="year"></span> Saffron Stitch • Made in India</p>
+    </footer>
+
+    <div class="mobile-overlay" hidden></div>
+    <aside id="mobile-drawer" class="mobile-drawer" aria-hidden="true">
+      <nav class="mobile-nav" aria-label="Mobile">
+        <a class="mobile-link" href="index.html">Home</a>
+        <a class="mobile-link" href="about.html">About</a>
+        <a class="mobile-link" href="contact.html">Contact</a>
+        <a class="mobile-link" href="developer.html">Developer</a>
+        <a class="mobile-link" href="cart.html">Cart</a>
+      </nav>
+    </aside>
+
+    <!-- Version selection modal -->
+    <div class="overlay" id="version-overlay"></div>
+    <div class="modal" id="version-modal" role="dialog" aria-modal="true" aria-labelledby="vm-title">
+      <h3 id="vm-title">Select iPhone Version</h3>
+      <p id="vm-product" class="subtitle" style="margin:0 0 6px"></p>
+      <div class="field">
+        <label for="vm-search">Search iPhone Version</label>
+        <div class="search-container">
+          <input type="text" id="vm-search" class="search-input" placeholder="Type to search iPhone versions..." />
+          <span class="search-icon">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+      <div class="versions-list" id="versions-list">
+        <!-- iPhone versions will be populated by JavaScript -->
+      </div>
+      <div class="actions">
+        <button class="add-btn ghost" id="vm-cancel">Cancel</button>
+        <button class="add-btn" id="vm-confirm">Add to Cart</button>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // Drawer toggle
+      const menuBtn = document.querySelector('.menu-toggle');
+      const drawer = document.getElementById('mobile-drawer');
+      const overlayNav = document.querySelector('.mobile-overlay');
+      function openDrawer(){ drawer.classList.add('open'); overlayNav.hidden=false; document.body.classList.add('nav-open'); menuBtn.setAttribute('aria-expanded','true'); drawer.setAttribute('aria-hidden','false'); }
+      function closeDrawer(){ drawer.classList.remove('open'); overlayNav.hidden=true; document.body.classList.remove('nav-open'); menuBtn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+      if(menuBtn && drawer && overlayNav){
+        menuBtn.addEventListener('click', ()=> drawer.classList.contains('open')? closeDrawer(): openDrawer());
+        overlayNav.addEventListener('click', closeDrawer);
+        drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click', closeDrawer));
+        window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeVersion(); });
+      }
+
+      // Cart helpers
+      function getCart(){ return JSON.parse(localStorage.getItem('cart')||'[]') }
+      function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); updateCartCount(); }
+      function updateCartCount(){ const link=document.getElementById('nav-cart-link'); if(!link) return; const c=getCart(); link.lastChild.nodeValue = ` Cart (${c.length})`; }
+      updateCartCount();
+
+      // iPhone versions data
+      const iphoneVersions = [
+        'iPhone X',
+        'iPhone XS',
+        'iPhone XS Max',
+        'iPhone XR',
+        'iPhone 11',
+        'iPhone 11 Pro',
+        'iPhone 11 Pro Max',
+        'iPhone 12 mini',
+        'iPhone 12',
+        'iPhone 12 Pro',
+        'iPhone 12 Pro Max',
+        'iPhone 13 mini',
+        'iPhone 13',
+        'iPhone 13 Pro',
+        'iPhone 13 Pro Max',
+        'iPhone 14',
+        'iPhone 14 Plus',
+        'iPhone 14 Pro',
+        'iPhone 14 Pro Max',
+        'iPhone 15',
+        'iPhone 15 Plus',
+        'iPhone 15 Pro',
+        'iPhone 15 Pro Max',
+        'iPhone 16',
+        'iPhone 16 Plus',
+        'iPhone 16 Pro',
+        'iPhone 16 Pro Max',
+        'iPhone 16e'
+      ];
+
+      // Version modal logic
+      let pendingProduct = null;
+      let selectedVersion = null;
+      const vOverlay = document.getElementById('version-overlay');
+      const vModal = document.getElementById('version-modal');
+      const vSearch = document.getElementById('vm-search');
+      const vCancel = document.getElementById('vm-cancel');
+      const vConfirm = document.getElementById('vm-confirm');
+      const vProduct = document.getElementById('vm-product');
+      const vList = document.getElementById('versions-list');
+
+      function populateVersionsList(versions = iphoneVersions) {
+        vList.innerHTML = '';
+        if (versions.length === 0) {
+          vList.innerHTML = '<div class="no-results">No iPhone versions found</div>';
+          return;
+        }
+        
+        versions.forEach(version => {
+          const item = document.createElement('div');
+          item.className = 'version-item';
+          item.dataset.version = version;
+          item.innerHTML = `
+            <span class="version-icon">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+            </span>
+            <span>${version}</span>
+          `;
+          
+          item.addEventListener('click', () => {
+            // Remove previous selection
+            document.querySelectorAll('.version-item.selected').forEach(el => el.classList.remove('selected'));
+            // Add selection to current item
+            item.classList.add('selected');
+            selectedVersion = version;
+            // Enable confirm button
+            vConfirm.disabled = false;
+            vConfirm.style.opacity = '1';
+          });
+          
+          vList.appendChild(item);
+        });
+      }
+
+      function openVersion(product) {
+        pendingProduct = product;
+        selectedVersion = null;
+        vProduct.textContent = product.title;
+        vSearch.value = '';
+        populateVersionsList();
+        vOverlay.classList.add('open');
+        vModal.classList.add('open');
+        vConfirm.disabled = true;
+        vConfirm.style.opacity = '0.5';
+        vSearch.focus();
+      }
+
+      function closeVersion() {
+        pendingProduct = null;
+        selectedVersion = null;
+        vOverlay.classList.remove('open');
+        vModal.classList.remove('open');
+      }
+
+      // Search functionality
+      vSearch.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredVersions = iphoneVersions.filter(version => 
+          version.toLowerCase().includes(searchTerm)
+        );
+        populateVersionsList(filteredVersions);
+      });
+
+      vCancel.addEventListener('click', closeVersion);
+      vOverlay.addEventListener('click', closeVersion);
+
+      // Add-to-cart buttons
+      document.querySelectorAll('.card .add-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const card = e.currentTarget.closest('.card');
+          const product = {
+            id: card.dataset.productId,
+            title: card.dataset.title,
+            price: Number(card.dataset.price),
+            image: card.dataset.image
+          };
+          openVersion(product);
+        });
+      });
+
+      vConfirm.addEventListener('click', () => {
+        if (!pendingProduct || !selectedVersion) return;
+        const cart = getCart();
+        cart.push({ ...pendingProduct, version: selectedVersion, qty: 1, type: 'case' });
+        setCart(cart);
+        closeVersion();
+      });
+    </script>
+  </body>
+</html> 

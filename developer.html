@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>About Developer — Areeb</title>
+    <meta name="description" content="About the developer: Areeb — Programmer, AI/ML, Robotics, and 3D Artist. Red themed page with blur accents and code rain effect." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --red-50:#fff1f2; --red-100:#ffe4e6; --red-200:#fecdd3; --red-300:#fda4af; --red-400:#fb7185;
+        --red-500:#f43f5e; --red-600:#e11d48; --red-700:#be123c; --red-800:#9f1239; --red-900:#881337;
+        --bg: radial-gradient(1200px 600px at 20% -10%, rgba(244,63,94,0.18), transparent 60%),
+              radial-gradient(1000px 500px at 120% 20%, rgba(244,63,94,0.12), transparent 60%),
+              #0b0b0c;
+        --text:#ffffff; --muted:#e5e7eb;
+      }
+      *{box-sizing:border-box}
+      html,body{height:100%}
+      body{margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background:var(--bg); color:var(--text); overflow-x:hidden}
+      a{color:inherit}
+      header{position:sticky; top:0; z-index:20; backdrop-filter:saturate(1.6) blur(10px); background:rgba(12,12,13,0.45); border-bottom:1px solid rgba(255,255,255,0.08)}
+      .nav{display:flex; align-items:center; justify-content:space-between; padding:10px 16px; max-width:1100px; margin:0 auto}
+      .brand{display:flex; align-items:center; gap:10px}
+      .brand-mark{width:12px; height:12px; border-radius:999px; background:var(--red-500); box-shadow:0 0 20px rgba(244,63,94,0.6)}
+      .brand-name{font-weight:700; letter-spacing:.2px; text-decoration:none}
+      .back{display:inline-flex; align-items:center; gap:8px; text-decoration:none; background:linear-gradient(180deg, var(--red-500), var(--red-600)); padding:8px 12px; border-radius:10px; box-shadow:0 10px 30px rgba(244,63,94,0.24)}
+
+      .hero{position:relative; max-width:1100px; margin:0 auto; padding:28px 16px 22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+      .avatar{width:clamp(84px, 14vw, 128px); height:clamp(84px, 14vw, 128px); border-radius:50%; border:2px solid rgba(255,255,255,0.18); box-shadow:0 10px 30px rgba(244,63,94,0.35); overflow:hidden}
+      .avatar svg{width:100%; height:100%; display:block}
+      .title{font-size:clamp(28px, 6vw, 44px); margin:8px 0 6px; line-height:1.05; background:linear-gradient(90deg, #fff, #fecaca); -webkit-background-clip:text; background-clip:text; color:transparent}
+      .subtitle{color:var(--muted); margin:0 0 16px}
+      /* Interactive avatar */
+      .avatar-wrap{position:relative; display:inline-block; border-radius:50%; perspective:800px}
+      .avatar-wrap .avatar{transform-style:preserve-3d; will-change:transform; transition: transform .12s ease}
+      .avatar-glow{position:absolute; inset:-8px; border-radius:50%; background:radial-gradient(closest-side, rgba(244,63,94,0.35), transparent 70%); filter:blur(12px); z-index:-1; opacity:.6; transition:opacity .2s ease}
+      .avatar-wrap:hover .avatar-glow{opacity:.9}
+      /* SVG parts */
+      .skin{fill:#fee2e2}
+      .hair{fill:#831843}
+      .eye-white{fill:#ffffff}
+      .pupil{fill:#111827}
+      .cheek{fill:#fecaca}
+      .lid{fill:#9f1239; opacity:.9; transform-box:fill-box; transform-origin:50% 50%; transform:scaleY(0);}
+      /* Robot styling */
+      .metal{fill:url(#metalGrad)}
+      .panel{fill:url(#panelGrad)}
+      .bolt{fill:#fca5a5; stroke:#7f1d1d; stroke-width:1}
+      .antenna{stroke:#7f1d1d; stroke-width:3; stroke-linecap:round}
+      .scan{fill:url(#scanGrad); opacity:.7}
+      /* Monogram badge */
+      .ring{fill:none; stroke:rgba(255,255,255,0.10); stroke-width:1.5}
+      .dot{fill:#f43f5e}
+      .mono{font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; font-weight:800; letter-spacing:.5px; fill:#ffffff}
+
+      /* Frosted cards */
+      .cards{display:grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap:14px; max-width:1100px; margin:8px auto 24px; padding:0 16px}
+      .card{grid-column: span 12; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:14px; padding:14px; backdrop-filter: blur(10px); box-shadow: 0 10px 40px rgba(0,0,0,0.25)}
+      .card h3{margin:2px 0 6px}
+      .card p{margin:0; color:#f3f4f6}
+      @media (min-width: 720px){
+        .card.span-6{grid-column: span 6}
+        .card.span-4{grid-column: span 4}
+      }
+
+      /* Code rain canvas */
+      canvas#code-rain{position:fixed; inset:0; width:100%; height:100%; z-index:-1}
+
+      /* Accent glowing shapes */
+      .glow{position:fixed; filter: blur(40px); opacity:.6; z-index:-2}
+      .glow.one{width:320px; height:320px; background:radial-gradient(closest-side, rgba(244,63,94,.5), transparent); top:10%; left:-60px}
+      .glow.two{width:380px; height:380px; background:radial-gradient(closest-side, rgba(244,63,94,.35), transparent); bottom:5%; right:-80px}
+
+      .footer{max-width:1100px; margin:20px auto 60px; padding:0 16px; color:var(--muted)}
+    </style>
+  </head>
+  <body>
+    <canvas id="code-rain" aria-hidden="true"></canvas>
+    <span class="glow one" aria-hidden="true"></span>
+    <span class="glow two" aria-hidden="true"></span>
+
+    <header>
+      <nav class="nav">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <a class="brand-name" href="index.html">Saffron Stitch</a>
+        </div>
+        <a class="back" href="index.html" aria-label="Back to home">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Home
+        </a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="avatar-wrap" id="avatar" role="img" aria-label="Interactive avatar of Areeb">
+        <div class="avatar">
+          <svg viewBox="0 0 200 200" role="presentation" aria-hidden="true">
+            <defs>
+              <clipPath id="clipCircle"><circle cx="100" cy="100" r="96"/></clipPath>
+              <radialGradient id="bgGrad" cx="50%" cy="40%" r="70%">
+                <stop offset="0%" stop-color="rgba(244,63,94,0.25)" />
+                <stop offset="100%" stop-color="rgba(244,63,94,0)" />
+              </radialGradient>
+            </defs>
+            <g clip-path="url(#clipCircle)">
+              <rect x="0" y="0" width="200" height="200" fill="url(#bgGrad)" />
+              <!-- Monogram concentric rings -->
+              <circle class="ring" cx="100" cy="100" r="90"/>
+              <circle class="ring" cx="100" cy="100" r="72"/>
+              <circle class="ring" cx="100" cy="100" r="54"/>
+              <!-- Orbiting dots -->
+              <g id="orbit">
+                <circle class="dot" id="dot1" cx="100" cy="32" r="4"/>
+                <circle class="dot" id="dot2" cx="168" cy="100" r="3"/>
+                <circle class="dot" id="dot3" cx="100" cy="168" r="3.5"/>
+                <circle class="dot" id="dot4" cx="32" cy="100" r="3"/>
+              </g>
+              <!-- Abstract core motif -->
+              <g id="core">
+                <circle cx="100" cy="100" r="6" class="dot"/>
+                <polygon id="hex" points="134,100 117,71 83,71 66,100 83,129 117,129" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+                <polygon id="tri" points="100,76 78,116 122,116" fill="none" stroke="rgba(244,63,94,0.6)" stroke-width="2"/>
+                <polygon id="dia" points="100,86 114,100 100,114 86,100" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <span class="avatar-glow" aria-hidden="true"></span>
+      </div>
+      <div>
+        <h1 class="title">Areeb — Developer</h1>
+        <p class="subtitle">Programmer • AI/ML • Robotics • 3D Artist & Designer</p>
+      </div>
+    </section>
+
+    <section class="cards">
+      <article class="card span-6">
+        <h3>What I do</h3>
+        <p>Clean websites, e‑commerce, dashboards, and integrations with performance‑first, accessible UI.</p>
+      </article>
+      <article class="card span-6">
+        <h3>Tech I love</h3>
+        <p>Python · HTML · CSS · JavaScript · C/C++ · C# · Java · AI/ML · Robotics · Photoshop · Premiere Pro · Blender · App & Web Dev</p>
+      </article>
+      <article class="card span-4">
+        <h3>Contact</h3>
+        <p>Email: <a href="mailto:areebaltaf007@gmail.com">areebaltaf007@gmail.com</a><br/>Location: India</p>
+      </article>
+      <article class="card span-4">
+        <h3>Availability</h3>
+        <p>Open for freelance and collaborations. Turn your idea into a polished product.</p>
+      </article>
+      <article class="card span-4">
+        <h3>Links</h3>
+        <p><a href="https://www.instagram.com/dar_areeb_07" target="_blank" rel="noopener">Instagram</a> · <a href="index.html">Home</a></p>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <p>© <span id="year"></span> Areeb • Built with care</p>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+      // Programming rain (Matrix-like) with red hues
+      const canvas = document.getElementById('code-rain');
+      const ctx = canvas.getContext('2d');
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/={}()[]+-_*#';
+      let width, height, columns, drops;
+      function resize(){
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        columns = Math.floor(width / 16);
+        drops = Array(columns).fill(0).map(() => Math.random() * -height);
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      function draw(){
+        ctx.fillStyle = 'rgba(11,11,12,0.22)';
+        ctx.fillRect(0,0,width,height);
+        ctx.fillStyle = 'rgba(244,63,94,0.9)';
+        ctx.font = '16px monospace';
+        for(let i=0;i<columns;i++){
+          const text = characters[Math.floor(Math.random()*characters.length)];
+          const x = i * 16;
+          const y = drops[i] * 16;
+          ctx.fillText(text, x, y);
+          if (y > height && Math.random() > 0.975){
+            drops[i] = Math.random() * -height;
+          }
+          drops[i] += 1;
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+
+      // Avatar tilt interaction
+      const avatarWrap = document.getElementById('avatar');
+      if (avatarWrap) {
+        const avatarEl = avatarWrap.querySelector('.avatar');
+        // Monogram orbit dots
+        // orbiting dots animation (core stays static)
+        let t = 0;
+        function orbit(){
+          t += 0.02;
+          const r1 = 68, r2 = 88;
+          const cx = 100, cy = 100;
+          d1.setAttribute('cx', String(cx + Math.cos(t) * r1));
+          d1.setAttribute('cy', String(cy + Math.sin(t) * r1));
+          d2.setAttribute('cx', String(cx + Math.cos(t+Math.PI/2) * r2));
+          d2.setAttribute('cy', String(cy + Math.sin(t+Math.PI/2) * r2));
+          d3.setAttribute('cx', String(cx + Math.cos(t+Math.PI) * r1));
+          d3.setAttribute('cy', String(cy + Math.sin(t+Math.PI) * r1));
+          d4.setAttribute('cx', String(cx + Math.cos(t+3*Math.PI/2) * r2));
+          d4.setAttribute('cy', String(cy + Math.sin(t+3*Math.PI/2) * r2));
+          requestAnimationFrame(orbit);
+        }
+        orbit();
+        function handleMove(clientX, clientY){
+          const rect = avatarWrap.getBoundingClientRect();
+          const x = (clientX - rect.left) / rect.width;
+          const y = (clientY - rect.top) / rect.height;
+          const rotateY = (x - 0.5) * 18;
+          const rotateX = (0.5 - y) * 18;
+          avatarEl.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+        }
+        function reset(){ avatarEl.style.transform = 'rotateX(0) rotateY(0) scale(1)'; }
+        avatarWrap.addEventListener('mousemove', (e)=> handleMove(e.clientX, e.clientY));
+        avatarWrap.addEventListener('mouseleave', reset);
+        avatarWrap.addEventListener('touchmove', (e)=>{ const t=e.touches[0]; if(t){ handleMove(t.clientX, t.clientY); } }, {passive:true});
+        avatarWrap.addEventListener('touchend', reset);
+        // core motif static (no pulsing)
+      }
+    </script>
+  </body>
+</html> 
